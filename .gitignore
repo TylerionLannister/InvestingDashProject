@@ -2,12 +2,18 @@
 .venv/
 env/
 
+# API
+.env
+
+
 # Python cache
 __pycache__/
 *.pyc
 
 # Database
 fundamentals.db
+fundamentals_backup_*.db
+*.db
 
 # Streamlit cache
 .streamlit/
