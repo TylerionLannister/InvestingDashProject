@@ -19,7 +19,7 @@ def fetch_short_volume(ticker: str):
     try:
         # list_short_volume returns an iterator
         data_iter = client.list_short_volume(
-	    ticker="GME",
+	    ticker=ticker,
 	    limit=1,
 	    sort="date.desc",
 	    )
@@ -28,7 +28,8 @@ def fetch_short_volume(ticker: str):
         return short_volume
     except Exception as e:
         print(f"Error fetching short volume for {ticker}: {e}")
-        return None
+        #return None
+        raise e
 
 # ------------------------
 # Test

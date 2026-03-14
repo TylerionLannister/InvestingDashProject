@@ -20,7 +20,7 @@ def fetch_float(ticker: str):
     try:
         # list_stocks_floats returns an iterator
         data_iter = client.list_stocks_floats(
-	    ticker="GME",
+	    ticker=ticker,
 	    limit=1,
 	    sort="effective_date.desc",
 	    )
@@ -29,7 +29,8 @@ def fetch_float(ticker: str):
         return float
     except Exception as e:
         print(f"Error fetching float for {ticker}: {e}")
-        return None
+        #return None
+        raise e
 
 # ------------------------
 # Test

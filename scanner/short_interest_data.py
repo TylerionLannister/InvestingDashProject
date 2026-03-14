@@ -28,7 +28,8 @@ def fetch_short_interest(ticker: str):
         return short_interest
     except Exception as e:
         print(f"Error fetching short interest for {ticker}: {e}")
-        return None
+        #return None
+        raise e #return error with string instead of returning none
 
 # ------------------------
 # Test
