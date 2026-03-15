@@ -15,21 +15,36 @@ client = RESTClient(MASSIVE_API_KEY)
 def fetch_float(ticker: str):
     """
     Fetch the most recent float for a given ticker.
-    Returns a dictionary with the latest float info.
+    Returns a dictionary with numeric fields for the scanner.
     """
     try:
         # list_stocks_floats returns an iterator
         data_iter = client.list_stocks_floats(
-	    ticker=ticker,
-	    limit=1,
-	    sort="effective_date.desc",
-	    )
+            ticker=ticker,
+            limit=1,
+            sort="effective_date.desc",
+        )
+
         # Get the first (latest) record if exists
-        float = next(data_iter, None)
-        return float
+        float_data = next(data_iter, None)
+
+        if not float_data:
+            return {
+                "float": None,
+                "free_float_percent": None,
+                "effective_date": None
+            }
+
+        # Return the numeric fields we care about
+        return {
+            "float": float_data.free_float,
+            "free_float_percent": float_data.free_float_percent,
+            "effective_date": float_data.effective_date
+        }
+
     except Exception as e:
         print(f"Error fetching float for {ticker}: {e}")
-        #return None
+        # Let the scanner's safe_api_call handle it
         raise e
 
 # ------------------------

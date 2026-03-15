@@ -95,42 +95,37 @@ def get_distance_to_gamma(price: float, gamma_strike):
     return ((gamma_strike - price) / price) * 100
 
 
-def get_options_pressure(ticker: str):
-
+def fetch_options_pressure(ticker: str):
     df = get_options_chain(ticker)
     if df.empty:
-        return None
+        return {k: None for k in [
+            "current_price","top_call_strike","top_call_oi","top_put_strike","top_put_oi",
+            "call_put_oi_ratio","largest_pressure_strike","gamma_ramp_strike","gamma_ramp_oi",
+            "call_oi_within_10pct","distance_to_gamma_strike_pct"
+        ]}
 
-    price = get_current_price(ticker)
-
+    price = float(get_current_price(ticker))
     call_strike, call_oi = get_top_call_oi_strike(df)
     put_strike, put_oi = get_top_put_oi_strike(df)
-
     ratio = get_call_put_oi_ratio(df)
-
     gamma_strike, gamma_oi = get_gamma_ramp_strike(df, price)
-
     ramp_oi = get_call_oi_within_percent(df, price)
-
     distance_pct = get_distance_to_gamma(price, gamma_strike)
-
     largest_pressure_strike = call_strike if call_oi > put_oi else put_strike
 
     return {
-        "ticker": ticker,
-        "current_price": price,
-        "top_call_strike": call_strike,
-        "top_call_oi": call_oi,
-        "top_put_strike": put_strike,
-        "top_put_oi": put_oi,
-        "call_put_oi_ratio": ratio,
-        "largest_pressure_strike": largest_pressure_strike,
-        "gamma_ramp_strike": gamma_strike,
-        "gamma_ramp_oi": gamma_oi,
-        "call_oi_within_10pct": ramp_oi,
-        "distance_to_gamma_strike_pct": distance_pct
+        "current_price": float(price),
+        "top_call_strike": float(call_strike),
+        "top_call_oi": float(call_oi),
+        "top_put_strike": float(put_strike),
+        "top_put_oi": float(put_oi),
+        "call_put_oi_ratio": float(ratio),
+        "largest_pressure_strike": float(largest_pressure_strike),
+        "gamma_ramp_strike": float(gamma_strike) if gamma_strike is not None else None,
+        "gamma_ramp_oi": float(gamma_oi) if gamma_oi is not None else None,
+        "call_oi_within_10pct": int(ramp_oi),
+        "distance_to_gamma_strike_pct": float(distance_pct) if distance_pct is not None else None
     }
-
 
 if __name__ == "__main__":
     ticker = "SLS"

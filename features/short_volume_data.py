@@ -23,9 +23,23 @@ def fetch_short_volume(ticker: str):
 	    limit=1,
 	    sort="date.desc",
 	    )
+
         # Get the first (latest) record if exists
         short_volume = next(data_iter, None)
-        return short_volume
+
+        if not short_volume:
+            return {
+                "short_volume": None,
+                "short_volume_ratio": None,
+                "total_volume": None
+            }
+        
+        return {
+            "short_volume": short_volume.short_volume,
+            "short_volume_ratio": short_volume.short_volume_ratio,
+            "total_volume": short_volume.total_volume
+        }
+
     except Exception as e:
         print(f"Error fetching short volume for {ticker}: {e}")
         #return None
